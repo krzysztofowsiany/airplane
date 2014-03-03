@@ -1,71 +1,114 @@
 /**
-* @module PIXI
-*/
+ * @module AIRPLANE
+ * @version 0.1
+ */
 
-(function(){
-    var root = this;
-    	
-	/**
-	 * @module PIXI
-	 */
-	var AIRPLANE = AIRPLANE || {};
+function Airplane() {
+	var 
+		game = Phaser.Game,
+		map,
+		coins,
+		layer = undefined,
+		sprite = undefined,
+		cursors = undefined
+		;
 	
-	AIRPLANE.VERSION = "v0.1";
-	
-	
-	AIRPLANE.Game  = function () {
+	function run() {
+		game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+
+
 		
-	};
-	/**
-	 * @class Renderer
-	 * @constructor
-	 */
-	AIRPLANE.Graphics = function() {
-		/**
-		 * @property render
-		 */
-		this.renderer = undefined;
-		this.stage = undefined;
 		
-	};
-	
-	
-	AIRPLANE.Graphics.prototype.init = function() {
 		
-		this.stage = new PIXI.Stage(0xff9933);
-		this.renderer = new PIXI.autoDetectRenderer(
-	               512,
-	               384,
-	               document.getElementById("game")
-	            );		
-	};
+	}
 	
-	AIRPLANE.Graphics.prototype.update = function() {
-		this.renderer.render(this.stage);
-	};
-	
-	
-	AIRPLANE.Graphics.prototype.start = function() {			
-		var t = this;
-		window.requestAnimFrame(function render(){
-		    t.update();
-		    window.requestAnimFrame(render);
-		});
-	};
-	
-	
-	///
-    if (typeof exports !== 'undefined') {
-        if (typeof module !== 'undefined' && module.exports) {
-            exports = module.exports = AIRPLANE;
-        }
-        exports.AIRPLANE= AIRPLANE;
-    } else if (typeof define !== 'undefined' && define.amd) {
-        define(AIRPLANE);
-    } else {
-        root.AIRPLANE = AIRPLANE;
+	function preload () {		
+	    game.load.tilemap('map', 'Maps/test.json', null, Phaser.Tilemap.TILED_JSON);
+
+	    game.load.image('ground_1x1', 'ground_1x1.png');
+	    game.load.image('walls_1x2', 'walls_1x2.png');
+	    game.load.image('tiles2', 'tiles2.png');
+
+	    game.load.image('phaser', 'arrow.png');
+	    game.load.spritesheet('coin', 'coin.png', 32, 32);
+	    
     }
 	
-}).call(this);
 	
 	
+	function create () {
+		
+	    map = game.add.tilemap('map');
+	    
+	    map.addTilesetImage('ground_1x1');
+	    map.addTilesetImage('walls_1x2');
+	    map.addTilesetImage('tiles2');
+	    
+	    map.setCollisionBetween(1, 12);
+
+	    layer = map.createLayer('Tile Layer 1');
+	    
+	    // layer.debug = true;
+
+	    layer.resizeWorld();
+
+	    //  Here we create our coins group
+	  //  coins = game.add.group();
+
+	    //  And now we convert all of the Tiled objects with an ID of 34 into sprites within the coins group
+	    //map.createFromObjects('Object Layer 1', 34, 'coin', 0, true, false, coins);
+
+	    //  Add animations to all of the coin sprites
+//	    coins.callAll('animations.add', 'animations', 'spin', [0, 1, 2, 3, 4, 5], 10, true);
+///	    coins.callAll('animations.play', 'animations', 'spin');
+
+	    sprite = game.add.sprite(260, 100, 'phaser');
+	    sprite.anchor.setTo(0.5, 0.5);
+
+	    console.log(sprite);
+	    //  This adjusts the collision body size.
+	    sprite.body.setRectangle(16, 16, 25, 15);
+
+	    //  We'll set a lower max angular velocity here to keep it from going totally nuts
+	    sprite.body.maxAngular = 500;
+
+	    //  Apply a drag otherwise the sprite will just spin and never slow down
+	    sprite.body.angularDrag = 50;
+
+	    game.camera.follow(sprite);
+
+	    cursors = game.input.keyboard.createCursorKeys();
+	    
+	}
+
+	function update() {
+		game.physics.collide(sprite, layer);
+	//    game.physics.overlap(sprite, coins, collectCoin, null, this);
+
+	    sprite.body.velocity.x = 0;
+	    sprite.body.velocity.y = 0;
+	    sprite.body.angularVelocity = 0;
+
+//	        sprite.body.angularVelocity = -300;
+
+	        game.physics.velocityFromAngle(sprite.angle, 30, sprite.body.velocity);
+
+
+	}
+
+	function collectCoin(player, coin) {
+
+	    coin.kill();
+
+	}
+
+	function render() {
+
+	    game.debug.renderPhysicsBody(sprite.body);
+
+	}
+	 
+	 return {
+		 run:run,
+	 };
+}

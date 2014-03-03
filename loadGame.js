@@ -8,22 +8,22 @@ require.config({
         /*
          ******** Load libraries ********
          */
-        // Lib - Pixi
-        'pixi': 'libs/pixi.dev',
+        // Lib - Phaser.io
+        'phaser': 'libs/phaser',
         //
         'game':'Game/Airplane',        
     }    
 });
 
 require(
-	    ['pixi', 'game'], 
-	    function (pixi, airplane) {
-	    	PIXI = pixi;	    	
-	    	AIRPLANE = airplane;
+	    ['phaser', 'game'], 
+	    function (phaser, airplane) {
+	    	//run game
+	    	Phaser = phaser;
+	    	var game = new Airplane();
 	    	
-	    	re =new AIRPLANE.Graphics();
-	    	re.init();
-	    	//console.log(re.renderer);
-	    	re.start();
-	  
+	    	game.run();
+	    	
+	    	
+	    	//AIRPLANE.run();
 	});

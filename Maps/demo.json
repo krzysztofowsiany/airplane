@@ -1,0 +1,9 @@
+{
+    "header": {
+		"name": "demo"
+	},
+	"map":[
+		{"width": 4}, 
+		{"width": 7}
+	]
+}
