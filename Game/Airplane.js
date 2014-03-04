@@ -10,7 +10,9 @@ function Airplane() {
 		coins,
 		layer = undefined,
 		sprite = undefined,
-		cursors = undefined
+		cursors = undefined,
+		CACTUS = 10
+	    
 		;
 	
 	function run() {
@@ -42,25 +44,18 @@ function Airplane() {
 	    map.addTilesetImage('tmw_desert_spacing');
 	    
 	    
-	    //map.setCollisionBetween(1, 12);
+	    map.setCollisionBetween(1, 12);
+
+
+	    map.setTileIndexCallback(10, hitCoin, this);
+	    //map.setTileLocationCallback(2, 0, 1, 1, hitCoin, this);
 
 	    layer = map.createLayer('Tile Layer 1');
-	    
-	    // layer.debug = true;
 
 	    layer.resizeWorld();
 
-	    //  Here we create our coins group
-	  //  coins = game.add.group();
 
-	    //  And now we convert all of the Tiled objects with an ID of 34 into sprites within the coins group
-	    //map.createFromObjects('Object Layer 1', 34, 'coin', 0, true, false, coins);
-
-	    //  Add animations to all of the coin sprites
-//	    coins.callAll('animations.add', 'animations', 'spin', [0, 1, 2, 3, 4, 5], 10, true);
-///	    coins.callAll('animations.play', 'animations', 'spin');
-
-	    sprite = game.add.sprite(260, 100, 'phaser');
+	    sprite = game.add.sprite(0, 100, 'phaser');
 	    sprite.anchor.setTo(0.5, 0.5);
 
 	   // console.log(sprite);
@@ -68,28 +63,38 @@ function Airplane() {
 	    sprite.body.setRectangle(16, 16, 25, 15);
 
 	    //  We'll set a lower max angular velocity here to keep it from going totally nuts
-	    sprite.body.maxAngular = 50;
+	    sprite.body.maxAngular = 100;
 
 	    //  Apply a drag otherwise the sprite will just spin and never slow down
-	    sprite.body.angularDrag = 50;
-
+	    sprite.body.angularDrag = 100;
+	    sprite.body.collideWorldBounds = true;
 	   // game.camera.follow(sprite);
 
 	   // cursors = game.input.keyboard.createCursorKeys();
 	    
 	}
 
+	function hitCoin(sprite, tile) {
+	//	console.log(tile);
+		map.putTile(0, tile.tile.x, tile.tile.y, layer);
+	    //tile.tile.alpha = 0;
+		
+	    //tile.tile.
+
+//	    layer.dirty = true;
+
+	    return true;
+
+	}
+
+	
 	function update() {
-		//game.physics.collide(sprite, layer);
+		game.physics.collide(sprite, layer);
+
         game.physics.velocityFromAngle(sprite.angle, 30, sprite.body.velocity);
        
 	}
 
-	function collectCoin(player, coin) {
-
-	    coin.kill();
-
-	}
 
 	function render() {
 
