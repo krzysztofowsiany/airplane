@@ -24,13 +24,11 @@ function Airplane() {
 	
 	function preload () {		
 	    game.load.tilemap('map', 'Maps/test.json', null, Phaser.Tilemap.TILED_JSON);
-
-	    game.load.image('ground_1x1', 'ground_1x1.png');
-	    game.load.image('walls_1x2', 'walls_1x2.png');
-	    game.load.image('tiles2', 'tiles2.png');
+	    
+	    game.load.image('tmw_desert_spacing', 'tmw_desert_spacing.png');
 
 	    game.load.image('phaser', 'arrow.png');
-	    game.load.spritesheet('coin', 'coin.png', 32, 32);
+	   // game.load.spritesheet('coin', 'coin.png', 32, 32);
 	    
     }
 	
@@ -40,11 +38,11 @@ function Airplane() {
 		
 	    map = game.add.tilemap('map');
 	    
-	    map.addTilesetImage('ground_1x1');
-	    map.addTilesetImage('walls_1x2');
-	    map.addTilesetImage('tiles2');
+	
+	    map.addTilesetImage('tmw_desert_spacing');
 	    
-	    map.setCollisionBetween(1, 12);
+	    
+	    //map.setCollisionBetween(1, 12);
 
 	    layer = map.createLayer('Tile Layer 1');
 	    
@@ -65,35 +63,26 @@ function Airplane() {
 	    sprite = game.add.sprite(260, 100, 'phaser');
 	    sprite.anchor.setTo(0.5, 0.5);
 
-	    console.log(sprite);
+	   // console.log(sprite);
 	    //  This adjusts the collision body size.
 	    sprite.body.setRectangle(16, 16, 25, 15);
 
 	    //  We'll set a lower max angular velocity here to keep it from going totally nuts
-	    sprite.body.maxAngular = 500;
+	    sprite.body.maxAngular = 50;
 
 	    //  Apply a drag otherwise the sprite will just spin and never slow down
 	    sprite.body.angularDrag = 50;
 
-	    game.camera.follow(sprite);
+	   // game.camera.follow(sprite);
 
-	    cursors = game.input.keyboard.createCursorKeys();
+	   // cursors = game.input.keyboard.createCursorKeys();
 	    
 	}
 
 	function update() {
-		game.physics.collide(sprite, layer);
-	//    game.physics.overlap(sprite, coins, collectCoin, null, this);
-
-	    sprite.body.velocity.x = 0;
-	    sprite.body.velocity.y = 0;
-	    sprite.body.angularVelocity = 0;
-
-//	        sprite.body.angularVelocity = -300;
-
-	        game.physics.velocityFromAngle(sprite.angle, 30, sprite.body.velocity);
-
-
+		//game.physics.collide(sprite, layer);
+        game.physics.velocityFromAngle(sprite.angle, 30, sprite.body.velocity);
+       
 	}
 
 	function collectCoin(player, coin) {
