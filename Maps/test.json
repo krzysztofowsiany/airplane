@@ -208,7 +208,7 @@
       "name": "Tile Layer 1",
       "opacity": 1,
       "properties": {
-        "collides": "true"
+        "collides": "false"
       },
       "type": "tilelayer",
       "visible": true,
