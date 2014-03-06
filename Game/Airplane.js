@@ -4,7 +4,8 @@
  */
 
 function Airplane() {
-	var game = Phaser.Game, map, coins, bomb, layer = undefined, sprite = undefined, cursors = undefined, CACTUS = 10
+	var game = Phaser.Game, map, coins, bomb, bombCount,layer = undefined, sprite = undefined, cursors = undefined, CACTUS = 10,
+	buldings
 
 	;
 
@@ -30,11 +31,16 @@ function Airplane() {
 	}
 
 	function genMap() {
-		var maxWeight = Math.floor((game.stage.bounds.height / 32) * 0.8);
-		for (var x = 0; x < game.stage.bounds.width / 32; x++) {
-			for (var y = 1; y <= Math.floor((Math.random() * maxWeight) + 1); y++) {
-				var c = game.add.sprite(x * 32, game.stage.bounds.height - y
+		buldings = game.add.group();
+		var maxWeight = Math.floor(( game.stage.bounds.height / 32 ) * 0.8);
+		for ( var x = 0; x < game.stage.bounds.width / 32; x++) {
+			for ( var y = 1; y <= Math.floor(( Math.random() * maxWeight ) + 1); y++) {
+				var c =buldings.create(x * 32, game.stage.bounds.height - y
 						* 32, 'coin');
+		        c.name = 'coin' + x+y;
+		        c.body.immovable = true;
+		        
+				//var c = game.add.sprite(x * 32, game.stage.bounds.height - y/					* 32, 'coin');
 				// c.anchor.setTo(0.5, 0.5);
 				// c.body.setRectangle(0, 0, 32, 32);
 
@@ -44,15 +50,18 @@ function Airplane() {
 	}
 
 	function dropBomb(x, y) {
+		//console.log(x);
 		bomb = game.add.sprite(x, y, 'coin');
 		bomb.anchor.setTo(0.5, 0.5);
-		bomb.body.setRectangle(16, 16, 25, 15);
+		//bomb.body.setRectangle(x, y, 32, 32);
 		bomb.rotation = Math.PI / 2;
+		bomb.body.immovable = true;
 		// bomb.body.maxAngular = 100;
 		// bomb.body.angularDrag = 100;
 		bomb.body.collideWorldBounds = true;
 		bomb.animations.add('walk');
 		bomb.animations.play('walk', 20, true);
+		bombCount = 5;
 
 	}
 
@@ -68,25 +77,26 @@ function Airplane() {
 
 		// layer.resizeWorld();
 		genMap();
-		sprite = game.add.sprite(0, 100, 'phaser');
-		sprite.anchor.setTo(0.5, 0.5);
+		sprite = game.add.sprite(0, 40, 'phaser');
+		sprite.anchor.setTo(0.5, 1);
 
 		// console.log(sprite);
 		// This adjusts the collision body size.
-		sprite.body.setRectangle(16, 16, 25, 15);
+		//sprite.body.setRectangle(16, 16, 25, 15);
 
 		// We'll set a lower max angular velocity here to keep it from going
 		// totally nuts
-		sprite.body.maxAngular = 100;
+		//sprite.body.maxAngular = 100;
 
 		// Apply a drag otherwise the sprite will just spin and never slow down
-		sprite.body.angularDrag = 100;
-		sprite.body.collideWorldBounds = true;
+		//sprite.body.angularDrag = 100;
+		//sprite.body.collideWorldBounds = true;
 		// game.camera.follow(sprite);
 
 		// cursors = game.input.keyboard.createCursorKeys();
-		jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		dropBomb(100, 0);
+		// jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
+		//dropBomb(100, 0);
 	}
 
 	function hitCoin(sprite, tile) {
@@ -102,15 +112,42 @@ function Airplane() {
 		return false;
 
 	}
+	
+
 
 	function update() {
 		// game.physics.collide(sprite, layer);
 		// game.physics.overlap(sprite, layer);
+		//game.physics.collide(game, sprite2, collisionHandler, null, this);
+		
+		//game.physics.collide(buldings, buldings);
+		game.physics.velocityFromAngle(sprite.angle, 80, sprite.body.velocity);
 
-		game.physics.velocityFromAngle(sprite.angle, 30, sprite.body.velocity);
-
-		if (bomb != undefined)
+		if (bombCount > 0) {
+			game.physics.collide(bomb, buldings, collisionHandler, null, this);
 			game.physics.velocityFromAngle(bomb.angle, 30, bomb.body.velocity);
+		}
+		
+		else if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+			dropBomb(sprite.x, sprite.y);
+		}
+
+		if (sprite.x > game.stage.bounds.width + sprite.width ) {
+			sprite.x = 0;
+			//sprite.body.velocity.x=0;
+			sprite.y+=50;
+			//console.log(sprite.x);
+		}
+	}
+	
+	function collisionHandler (player, veg) {
+		bombCount--;		
+		veg.kill();
+		if (bombCount < 0) {
+			player.kill();
+			//bomb = undefined;
+		}
+		
 	}
 
 	function render() {
