@@ -25,8 +25,9 @@ function Airplane() {
 
 		// game.load.image('tmw_desert_spacing', 'tmw_desert_spacing.png');
 
-		game.load.image('phaser', 'arrow.png');
+		//game.load.image('phaser', 'arrow.png');
 		game.load.spritesheet('coin', 'coin.png', 32, 32);
+		game.load.spritesheet('airplane', 'samolocik.png', 300, 167);
 
 	}
 
@@ -77,8 +78,10 @@ function Airplane() {
 
 		// layer.resizeWorld();
 		genMap();
-		sprite = game.add.sprite(0, 40, 'phaser');
+		sprite = game.add.sprite(0, 40, 'airplane');
 		sprite.anchor.setTo(0.5, 1);
+		sprite.animations.add('walk');
+		sprite.animations.play('walk', 20, true);
 
 		// console.log(sprite);
 		// This adjusts the collision body size.
