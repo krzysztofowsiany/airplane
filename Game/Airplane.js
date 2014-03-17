@@ -27,7 +27,7 @@ function Airplane() {
 
 		//game.load.image('phaser', 'arrow.png');
 		game.load.spritesheet('coin', 'coin.png', 32, 32);
-		game.load.spritesheet('airplane', 'samolocik.png', 300, 167);
+		game.load.spritesheet('airplane', 'samolocik.png', 100, 55);
 
 	}
 
