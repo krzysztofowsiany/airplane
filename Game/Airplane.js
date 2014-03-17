@@ -50,16 +50,23 @@ function Airplane() {
 
 	}
 
+	function normalizeX(x) {
+		
+		return Math.floor(x / 32) * 32;
+	}
+	
 	function dropBomb(x, y) {
 		//console.log(x);
-		bomb = game.add.sprite(x, y, 'coin');
+		
+		bomb = game.add.sprite(normalizeX(x), y, 'coin');
 		bomb.anchor.setTo(0.5, 0.5);
-		//bomb.body.setRectangle(x, y, 32, 32);
+		//bomb.body.setRectangle(32, 32, 0, 0);
 		bomb.rotation = Math.PI / 2;
-		bomb.body.immovable = true;
+		//bomb.x = normalizeX(x);
+		//bomb.body.immovable = true;
 		// bomb.body.maxAngular = 100;
 		// bomb.body.angularDrag = 100;
-		bomb.body.collideWorldBounds = true;
+		//bomb.body.collideWorldBounds = true;
 		bomb.animations.add('walk');
 		bomb.animations.play('walk', 20, true);
 		bombCount = 5;
@@ -84,7 +91,7 @@ function Airplane() {
 
 		// console.log(sprite);
 		// This adjusts the collision body size.
-		//sprite.body.setRectangle(16, 16, 25, 15);
+		sprite.body.setRectangle(40, 20, 0, 0);
 
 		// We'll set a lower max angular velocity here to keep it from going
 		// totally nuts
@@ -125,9 +132,10 @@ function Airplane() {
 		//game.physics.collide(buldings, buldings);
 		game.physics.velocityFromAngle(sprite.angle, 80, sprite.body.velocity);
 
-		if (bombCount > 0) {
+		if (bombCount > 0) {			
 			game.physics.collide(bomb, buldings, collisionHandler, null, this);
 			game.physics.velocityFromAngle(bomb.angle, 30, bomb.body.velocity);
+			//bomb.body.velocity.y=30;
 		}
 		
 		else if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
