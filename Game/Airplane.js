@@ -27,7 +27,7 @@ function Airplane() {
 
 		//game.load.image('phaser', 'arrow.png');
 		game.load.spritesheet('coin', 'coin.png', 32, 32);
-		game.load.spritesheet('airplane', 'samolocik.png', 100, 55);
+		game.load.spritesheet('airplane', 'samolocik.png', 80, 45);
 
 	}
 
@@ -80,7 +80,7 @@ function Airplane() {
 		sprite = game.add.sprite(0, 40, 'airplane');
 		sprite.anchor.setTo(0.5, 1);
 		sprite.animations.add('walk');
-		sprite.animations.play('walk', 20, true);
+		sprite.animations.play('walk', 40, true);
 
 		// console.log(sprite);
 		// This adjusts the collision body size.
@@ -154,7 +154,7 @@ function Airplane() {
 
 	function render() {
 
-		game.debug.renderPhysicsBody(sprite.body);
+		//game.debug.renderPhysicsBody(sprite.body);
 
 	}
 
