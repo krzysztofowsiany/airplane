@@ -63,7 +63,6 @@ function Airplane() {
 		bomb.animations.add('walk');
 		bomb.animations.play('walk', 20, true);
 		bombCount = 5;
-
 	}
 
 	function create() {
