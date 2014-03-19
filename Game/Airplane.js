@@ -5,7 +5,7 @@
 
 function Airplane() {
 	var game = Phaser.Game, map, coins, bomb, bombCount,layer = undefined, sprite = undefined, cursors = undefined, CACTUS = 10,
-	buldings
+	buldings, background
 
 	;
 
@@ -26,6 +26,7 @@ function Airplane() {
 		// game.load.image('tmw_desert_spacing', 'tmw_desert_spacing.png');
 
 		//game.load.image('phaser', 'arrow.png');
+		game.load.image('background', 'background.png');
 		game.load.spritesheet('coin', 'coin.png', 32, 32);
 		game.load.spritesheet('airplane', 'samolocik.png', 80, 45);
 
@@ -77,6 +78,8 @@ function Airplane() {
 
 		// layer.resizeWorld();
 		genMap();
+		background = game.add.sprite(0, 0, 'background');
+		
 		sprite = game.add.sprite(0, 40, 'airplane');
 		sprite.anchor.setTo(0.5, 1);
 		sprite.animations.add('walk');
