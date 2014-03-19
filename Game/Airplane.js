@@ -157,7 +157,7 @@ function Airplane() {
 
 	function render() {
 
-		//game.debug.renderPhysicsBody(sprite.body);
+		game.debug.renderPhysicsBody(buldings.body);
 
 	}
 
