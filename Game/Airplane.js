@@ -56,7 +56,7 @@ function Airplane() {
 		//console.log(x);
 		
 		bomb = game.add.sprite(Math.round(x / 32) * 32, y, 'coin');
-		bomb.anchor.setTo(0, 0.5);
+		bomb.anchor.setTo(0.5, 0.5);
 		//bomb.body.setRectangle(x, y, 32, 32);
 		bomb.rotation = Math.PI / 2;
 		//bomb.body.immovable = true;
@@ -165,7 +165,8 @@ function Airplane() {
 
 	function render() {
 
-		//game.debug.renderPhysicsBody(buldings.body);
+		if (bombCount > 0)
+			game.debug.renderPhysicsBody(bomb.body);
 
 	}
 
