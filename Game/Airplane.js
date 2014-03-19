@@ -28,6 +28,7 @@ function Airplane() {
 		//game.load.image('phaser', 'arrow.png');
 		game.load.image('background', 'background.png');
 		game.load.spritesheet('coin', 'coin.png', 32, 32);
+		game.load.spritesheet('bomb', 'coin.png', 30, 32);
 		game.load.spritesheet('airplane', 'samolocik.png', 80, 45);
 
 	}
@@ -40,6 +41,7 @@ function Airplane() {
 				var c =buldings.create(x * 32, game.stage.bounds.height - y
 						* 32, 'coin');
 		        c.name = 'coin' + x+y;
+			c.anchor.setTo(0.5,0.5);
 		       // c.body.bounce.y  =1;
 		       // c.body.immovable = true;
 		        
@@ -55,7 +57,7 @@ function Airplane() {
 	function dropBomb(x, y) {
 		//console.log(x);
 		
-		bomb = game.add.sprite(Math.round(x / 32) * 32, y, 'coin');
+		bomb = game.add.sprite(Math.round(x / 32) * 32+1, y, 'bomb');
 		bomb.anchor.setTo(0.5, 0.5);
 		//bomb.body.setRectangle(x, y, 32, 32);
 		bomb.rotation = Math.PI / 2;
@@ -139,10 +141,11 @@ function Airplane() {
 			
 			//game.physics.collide(bomb, buldings, collisionHandler, null, this);
 			game.physics.velocityFromAngle(bomb.angle, 30, bomb.body.velocity);
-		}
-		
-		else if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-			dropBomb(sprite.x, sprite.y);
+		} else {
+                       
+			if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+				dropBomb(sprite.x, sprite.y);
+			}
 		}
 
 		if (sprite.x > game.stage.bounds.width + sprite.width ) {
@@ -153,21 +156,24 @@ function Airplane() {
 		}
 	}
 	
+	function boom() {
+		bomb.kill();
+	}
+
 	function collisionHandler (player, veg) {
 		bombCount--;		
 		veg.kill();
-		if (bombCount < 0) {
-			player.kill();
+		if (bombCount <= 0) {
+			//player.kill();
+ 			boom();
 			//bomb = undefined;
 		}
 		
 	}
 
 	function render() {
-
 		if (bombCount > 0)
 			game.debug.renderPhysicsBody(bomb.body);
-
 	}
 
 	return {
