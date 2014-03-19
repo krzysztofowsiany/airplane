@@ -40,7 +40,7 @@ function Airplane() {
 				var c =buldings.create(x * 32, game.stage.bounds.height - y
 						* 32, 'coin');
 		        c.name = 'coin' + x+y;
-		        c.body.bounce.y  =1;
+		       // c.body.bounce.y  =1;
 		       // c.body.immovable = true;
 		        
 				//var c = game.add.sprite(x * 32, game.stage.bounds.height - y/					* 32, 'coin');
@@ -56,7 +56,7 @@ function Airplane() {
 		//console.log(x);
 		
 		bomb = game.add.sprite(Math.round(x / 32) * 32, y, 'coin');
-		bomb.anchor.setTo(0.5, 0.5);
+		bomb.anchor.setTo(0, 0.5);
 		//bomb.body.setRectangle(x, y, 32, 32);
 		bomb.rotation = Math.PI / 2;
 		//bomb.body.immovable = true;
@@ -66,7 +66,7 @@ function Airplane() {
 		bomb.animations.add('walk');
 		bomb.animations.play('walk', 20, true);
 		bombCount = 5;
-		bomb.body.bounce.y  =1
+		//bomb.body.bounce.y  =1
 		// player.body.bounce.y = 0.2;
 		 //   player.body.gravity.y = 6;
 	}
