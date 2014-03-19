@@ -40,7 +40,8 @@ function Airplane() {
 				var c =buldings.create(x * 32, game.stage.bounds.height - y
 						* 32, 'coin');
 		        c.name = 'coin' + x+y;
-		        c.body.immovable = true;
+		        c.body.bounce.y  =1;
+		       // c.body.immovable = true;
 		        
 				//var c = game.add.sprite(x * 32, game.stage.bounds.height - y/					* 32, 'coin');
 				// c.anchor.setTo(0.5, 0.5);
@@ -57,13 +58,15 @@ function Airplane() {
 		bomb.anchor.setTo(0.5, 0.5);
 		//bomb.body.setRectangle(x, y, 32, 32);
 		bomb.rotation = Math.PI / 2;
-		bomb.body.immovable = true;
+		//bomb.body.immovable = true;
 		// bomb.body.maxAngular = 100;
 		// bomb.body.angularDrag = 100;
 		bomb.body.collideWorldBounds = true;
 		bomb.animations.add('walk');
 		bomb.animations.play('walk', 20, true);
 		bombCount = 5;
+		// player.body.bounce.y = 0.2;
+		 //   player.body.gravity.y = 6;
 	}
 
 	function create() {
@@ -84,7 +87,8 @@ function Airplane() {
 		sprite.anchor.setTo(0.5, 1);
 		sprite.animations.add('walk');
 		sprite.animations.play('walk', 40, true);
-
+		
+		
 		// console.log(sprite);
 		// This adjusts the collision body size.
 		//sprite.body.setRectangle(16, 16, 25, 15);
@@ -129,7 +133,9 @@ function Airplane() {
 		game.physics.velocityFromAngle(sprite.angle, 80, sprite.body.velocity);
 
 		if (bombCount > 0) {
-			game.physics.collide(bomb, buldings, collisionHandler, null, this);
+			game.physics.overlap(bomb, buldings, collisionHandler, null, this);
+			
+			//game.physics.collide(bomb, buldings, collisionHandler, null, this);
 			game.physics.velocityFromAngle(bomb.angle, 30, bomb.body.velocity);
 		}
 		
@@ -157,7 +163,7 @@ function Airplane() {
 
 	function render() {
 
-		game.debug.renderPhysicsBody(buldings.body);
+		//game.debug.renderPhysicsBody(buldings.body);
 
 	}
 
