@@ -77,9 +77,9 @@ function Airplane() {
 		// layer = map.createLayer('Tile Layer 1');
 
 		// layer.resizeWorld();
-		genMap();
-		background = game.add.sprite(0, 0, 'background');
 		
+		background = game.add.sprite(0, 0, 'background');
+		genMap();
 		sprite = game.add.sprite(0, 40, 'airplane');
 		sprite.anchor.setTo(0.5, 1);
 		sprite.animations.add('walk');
