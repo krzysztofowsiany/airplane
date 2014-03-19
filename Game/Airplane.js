@@ -54,7 +54,8 @@ function Airplane() {
 
 	function dropBomb(x, y) {
 		//console.log(x);
-		bomb = game.add.sprite(x, y, 'coin');
+		
+		bomb = game.add.sprite(Math.round(x / 32) * 32, y, 'coin');
 		bomb.anchor.setTo(0.5, 0.5);
 		//bomb.body.setRectangle(x, y, 32, 32);
 		bomb.rotation = Math.PI / 2;
@@ -65,6 +66,7 @@ function Airplane() {
 		bomb.animations.add('walk');
 		bomb.animations.play('walk', 20, true);
 		bombCount = 5;
+		bomb.body.bounce.y  =1
 		// player.body.bounce.y = 0.2;
 		 //   player.body.gravity.y = 6;
 	}
