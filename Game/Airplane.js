@@ -67,7 +67,7 @@ function Airplane() {
 	function createSounds(){
 		airplaneSound = game.add.audio('airplaneSound',1,true);
 		airplaneSound.override = true;
-		airplaneSound.addMarker('fly', 0, 1.6, 1, true);
+		airplaneSound.addMarker('fly', 0, 1.5, 1, true);
 		airplaneSound.play('fly');
 		 
 	//    music.play('',0,1,true);
@@ -169,7 +169,7 @@ function Airplane() {
 		if (airplane.x > game.stage.bounds.width + airplane.width) {
 			airplane.x = 0 - airplane.width;			
 			//sprite.body.velocity.x=0;
-			airplane.y += 50;			
+			airplane.y += 32;			
 		}
 	}
 
