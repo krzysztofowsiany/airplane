@@ -4,7 +4,14 @@
  */
 
 function Airplane() {
+<<<<<<< HEAD
 	var game = Phaser.Game, map, coins, bomb, bombCount, layer = undefined, sprite = undefined, cursors = undefined, CACTUS = 10, buldings;
+=======
+	var game = Phaser.Game, map, coins, bomb, bombCount,layer = undefined, sprite = undefined, cursors = undefined, CACTUS = 10,
+	buldings, background
+
+	;
+>>>>>>> d1e7264c1c074e78a909745455f9532a481511e3
 
 	function run() {
 		game = new Phaser.Game(800, 400, Phaser.CANVAS, 'phaser-example', {
@@ -23,13 +30,16 @@ function Airplane() {
 		// game.load.image('tmw_desert_spacing', 'tmw_desert_spacing.png');
 
 		//game.load.image('phaser', 'arrow.png');
+		game.load.image('background', 'background.png');
 		game.load.spritesheet('coin', 'coin.png', 32, 32);
+		game.load.spritesheet('bomb', 'coin.png', 30, 32);
 		game.load.spritesheet('airplane', 'samolocik.png', 80, 45);
 
 	}
 
 	function genMap() {
 		buldings = game.add.group();
+<<<<<<< HEAD
 		var maxWeight = Math.floor((game.stage.bounds.height / 32 ) * 0.8);
 		for (var x = 0; x < game.stage.bounds.width / 32; x++) {
 			for (var y = 1; y <= Math.floor((Math.random() * maxWeight ) + 1); y++) {
@@ -37,6 +47,18 @@ function Airplane() {
 				c.name = 'coin' + x + y;
 				c.body.immovable = true;
 
+=======
+		var maxWeight = Math.floor(( game.stage.bounds.height / 32 ) * 0.8);
+		for ( var x = 0; x < game.stage.bounds.width / 32; x++) {
+			for ( var y = 1; y <= Math.floor(( Math.random() * maxWeight ) + 1); y++) {
+				var c =buldings.create(x * 32, game.stage.bounds.height - y
+						* 32, 'coin');
+		        c.name = 'coin' + x+y;
+			c.anchor.setTo(0.5,0.5);
+		       // c.body.bounce.y  =1;
+		       // c.body.immovable = true;
+		        
+>>>>>>> d1e7264c1c074e78a909745455f9532a481511e3
 				//var c = game.add.sprite(x * 32, game.stage.bounds.height - y/					* 32, 'coin');
 				// c.anchor.setTo(0.5, 0.5);
 				// c.body.setRectangle(0, 0, 32, 32);
@@ -48,17 +70,21 @@ function Airplane() {
 
 	function dropBomb(x, y) {
 		//console.log(x);
-		bomb = game.add.sprite(x, y, 'coin');
+		
+		bomb = game.add.sprite(Math.round(x / 32) * 32+1, y, 'bomb');
 		bomb.anchor.setTo(0.5, 0.5);
 		//bomb.body.setRectangle(x, y, 32, 32);
 		bomb.rotation = Math.PI / 2;
-		bomb.body.immovable = true;
+		//bomb.body.immovable = true;
 		// bomb.body.maxAngular = 100;
 		// bomb.body.angularDrag = 100;
 		bomb.body.collideWorldBounds = true;
 		bomb.animations.add('walk');
 		bomb.animations.play('walk', 20, true);
 		bombCount = 5;
+		//bomb.body.bounce.y  =1
+		// player.body.bounce.y = 0.2;
+		 //   player.body.gravity.y = 6;
 	}
 
 	function create() {
@@ -72,12 +98,15 @@ function Airplane() {
 		// layer = map.createLayer('Tile Layer 1');
 
 		// layer.resizeWorld();
+		
+		background = game.add.sprite(0, 0, 'background');
 		genMap();
 		sprite = game.add.sprite(0, 40, 'airplane');
 		sprite.anchor.setTo(0.5, 1);
 		sprite.animations.add('walk');
 		sprite.animations.play('walk', 40, true);
-
+		
+		
 		// console.log(sprite);
 		// This adjusts the collision body size.
 		//sprite.body.setRectangle(16, 16, 25, 15);
@@ -120,10 +149,20 @@ function Airplane() {
 		game.physics.velocityFromAngle(sprite.angle, 80, sprite.body.velocity);
 
 		if (bombCount > 0) {
-			game.physics.collide(bomb, buldings, collisionHandler, null, this);
+			game.physics.overlap(bomb, buldings, collisionHandler, null, this);
+			
+			//game.physics.collide(bomb, buldings, collisionHandler, null, this);
 			game.physics.velocityFromAngle(bomb.angle, 30, bomb.body.velocity);
+<<<<<<< HEAD
 		} else if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
 			dropBomb(sprite.x, sprite.y);
+=======
+		} else {
+                       
+			if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+				dropBomb(sprite.x, sprite.y);
+			}
+>>>>>>> d1e7264c1c074e78a909745455f9532a481511e3
 		}
 
 		if (sprite.x > game.stage.bounds.width + sprite.width) {
@@ -133,21 +172,37 @@ function Airplane() {
 			//console.log(sprite.x);
 		}
 	}
+<<<<<<< HEAD
 
 	function collisionHandler(player, veg) {
 		bombCount--;
+=======
+	
+	function boom() {
+		bomb.kill();
+	}
+
+	function collisionHandler (player, veg) {
+		bombCount--;		
+>>>>>>> d1e7264c1c074e78a909745455f9532a481511e3
 		veg.kill();
-		if (bombCount < 0) {
-			player.kill();
+		if (bombCount <= 0) {
+			//player.kill();
+ 			boom();
 			//bomb = undefined;
 		}
 
 	}
 
 	function render() {
+<<<<<<< HEAD
 
 		//function(z) {};game.debug.renderPhysicsBody(sprite.body);
 
+=======
+		if (bombCount > 0)
+			game.debug.renderPhysicsBody(bomb.body);
+>>>>>>> d1e7264c1c074e78a909745455f9532a481511e3
 	}
 
 	return {
