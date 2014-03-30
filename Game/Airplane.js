@@ -8,6 +8,10 @@ function Airplane() {
 	
 	,score
 	,scoreText
+	
+	
+	//sounds
+	,airplaneSound
 	;
 
 	function run() {
@@ -23,6 +27,10 @@ function Airplane() {
 	function preload() {
 		// game.load.tilemap('map', 'Maps/test.json', null,
 
+		//music
+		game.load.audio('airplaneSound', ['audio/effects/airplane.mp3', 'audio/effects/airplane.ogg']);
+		//image
+		
 		game.load.image('background', 'background.png');
 		game.load.spritesheet('coin', 'coin.png', 32, 32);
 		game.load.spritesheet('bomb', 'coin.png', 32, 32);
@@ -56,8 +64,18 @@ function Airplane() {
 		scoreText.setText('Score: '+score);
 	}
 	
+	function createSounds(){
+		airplaneSound = game.add.audio('airplaneSound',1,true);
+		airplaneSound.override = true;
+		airplaneSound.addMarker('fly', 0, 1.6, 1, true);
+		airplaneSound.play('fly');
+		 
+	//    music.play('',0,1,true);
+	}
+	
 
 	function create() {
+		createSounds();
 		background = game.add.sprite(0, 0, 'background');
 		genMap();
 		
