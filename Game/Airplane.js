@@ -6,6 +6,7 @@
 function Airplane() {
 	var game = Phaser.Game, map, coins, bomb, bombCount, layer = undefined, airplane = undefined, cursors = undefined, CACTUS = 10, buldings, background, airplaneSpeed = 50, bombSpeed = 50
 	
+	,boom
 	,airplaneDownStep
 	
 	,score
@@ -36,6 +37,7 @@ function Airplane() {
 		game.load.image('background', 'background.png');
 		game.load.spritesheet('coin', 'coin.png', 32, 32);
 		game.load.spritesheet('bomb', 'img/bomba3.png', 10, 26);
+		game.load.spritesheet('boom', 'img/boom.png', 64, 60);
 		game.load.spritesheet('airplane', 'samolocik.png', 80, 45);
 
 	}
@@ -75,6 +77,9 @@ function Airplane() {
 	//    music.play('',0,1,true);
 	}
 	
+	
+	
+	
 	function initialParams() {
 		airplaneDownStep = 32;
 		score=0;
@@ -86,6 +91,14 @@ function Airplane() {
 		createSounds();
 		background = game.add.sprite(0, 0, 'background');
 		genMap();
+		
+		
+		//boom
+		boom = game.add.sprite(0, 40, 'boom');
+		boom.anchor.setTo(0.5, 0.5);
+		boom.animations.add('boom');
+		boom.animations.play('boom', 40, false);
+		
 		
 		
 		var style = { font: "bold 20pt Arial", fill: "#ffffff", align: "center" };
