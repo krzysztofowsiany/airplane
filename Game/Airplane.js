@@ -5,8 +5,12 @@
 
 function Airplane() {
 	var game = Phaser.Game, map, coins, bomb, bombCount, layer = undefined, airplane = undefined, cursors = undefined, CACTUS = 10, buldings, background, airplaneSpeed = 50, bombSpeed = 50
+
 	
 	,boom
+
+	,touch
+
 	,airplaneDownStep
 	
 	,score
@@ -15,6 +19,8 @@ function Airplane() {
 	
 	//sounds
 	,airplaneSound
+	,boomSound
+	,fallingSound
 	;
 
 	function run() {
@@ -31,7 +37,9 @@ function Airplane() {
 		// game.load.tilemap('map', 'Maps/test.json', null,
 
 		//music
-		game.load.audio('airplaneSound', ['audio/effects/airplane.mp3', 'audio/effects/airplane.ogg']);
+		game.load.audio('airplaneSound', ['audio/effects/airplane2.mp3', 'audio/effects/airplane.ogg']);
+		game.load.audio('boomSound', ['audio/effects/boom.mp3', 'audio/effects/boom.ogg']);
+		game.load.audio('fallingSound', ['audio/effects/falling.mp3', 'audio/effects/falling.ogg']);
 		//image
 		
 		game.load.image('background', 'background.png');
@@ -71,9 +79,14 @@ function Airplane() {
 	function createSounds(){
 		airplaneSound = game.add.audio('airplaneSound',1,true);
 		airplaneSound.override = true;
-		airplaneSound.addMarker('fly', 0, 1.5, 1, true);
+		airplaneSound.addMarker('fly', 0, 0.83, 1, true);
 		airplaneSound.play('fly');
 		 
+		fallingSound = game.add.audio('fallingSound',1);
+		fallingSound.override = true;
+
+		boomSound = game.add.audio('boomSound',1);
+		boomSound.override = true;
 	//    music.play('',0,1,true);
 	}
 	
@@ -93,11 +106,6 @@ function Airplane() {
 		genMap();
 		
 		
-		//boom
-		boom = game.add.sprite(0, 40, 'boom');
-		boom.anchor.setTo(0.5, 0.5);
-		boom.animations.add('boom');
-		boom.animations.play('boom', 40, false);
 		
 		
 		
@@ -116,6 +124,7 @@ function Airplane() {
 		airplane.x = -airplane.width;	
 
 		game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
+		touch = game.input.addPointer();
 		//dropBomb(100, 0);
 		
 		
@@ -124,6 +133,8 @@ function Airplane() {
 	
 	
 	function destroyBomb() {
+		fallingSound.stop();
+                boomSound.play();
 		bombCount = 0;
 		bomb.kill();
 	}
@@ -147,10 +158,25 @@ function Airplane() {
 	}
 
 
+    function showBoom(){
+    	//boom
+		boom = game.add.sprite(0, 40, 'boom');
+		boom.anchor.setTo(0.5, 0.5);
+		boom.animations.add('boom');
+    	boom.x = bomb.x + bomb.width / 2;
+		boom.y = bomb.y + bomb.height;
+		boom.animations.play('boom', 20, false, true);		
+    }
+
 	function collisionWithBulding(bomb, buldingModule) {
 		bombCount--;
+        boomSound.play();
 		buldings.remove(buldingModule);
 		buldingModule.kill();		
+		
+		showBoom();
+		
+		
 		addScore();
 		
 		if (bombCount <= 0) {
@@ -161,12 +187,14 @@ function Airplane() {
 
 	function render() {
 
-		if (bombCount > 0)
-			game.debug.renderPhysicsBody(bomb.body);
+//		if (bombCount > 0)
+//			game.debug.renderPhysicsBody(bomb.body);
 
-		buldings.forEach(function(sp) {
-			game.debug.renderPhysicsBody(sp.body);
-		});
+//		buldings.forEach(function(sp) {
+//			game.debug.renderPhysicsBody(sp.body);
+//		});
+
+
 	}
 	
 	
@@ -182,6 +210,7 @@ function Airplane() {
 		bomb.body.x = x;
 		bomb.body.y = y - 20;
 		bomb.body.velocity.y = bombSpeed;		
+		fallingSound.play();
 	}
 	
 	function update() {
@@ -195,7 +224,9 @@ function Airplane() {
 			}
 		}
 		else {
-			if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+			if ((game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+				||(touch.isDown))
+ {
 				dropBomb(airplane.x, airplane.y);
 			}
 		}
