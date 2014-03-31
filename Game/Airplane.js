@@ -154,9 +154,7 @@ function Airplane() {
 		buldings.forEach(function(sp) {
 			game.debug.renderPhysicsBody(sp.body);
 		});
-
 	}
-	
 	
 	
 	function dropBomb(x, y) {
