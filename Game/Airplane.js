@@ -6,6 +6,8 @@
 function Airplane() {
 	var game = Phaser.Game, map, coins, bomb, bombCount, layer = undefined, airplane = undefined, cursors = undefined, CACTUS = 10, buldings, background, airplaneSpeed = 50, bombSpeed = 50
 	
+	,airplaneDownStep
+	
 	,score
 	,scoreText
 	
@@ -15,7 +17,7 @@ function Airplane() {
 	;
 
 	function run() {
-		game = new Phaser.Game(800, 400, Phaser.CANVAS, 'phaser-example', {
+		game = new Phaser.Game(800, 400, Phaser.AUTO, 'phaser-example', {
 			preload : preload,
 			create : create,
 			update : update,
@@ -33,7 +35,7 @@ function Airplane() {
 		
 		game.load.image('background', 'background.png');
 		game.load.spritesheet('coin', 'coin.png', 32, 32);
-		game.load.spritesheet('bomb', 'coin.png', 32, 32);
+		game.load.spritesheet('bomb', 'img/bomba3.png', 10, 26);
 		game.load.spritesheet('airplane', 'samolocik.png', 80, 45);
 
 	}
@@ -73,25 +75,32 @@ function Airplane() {
 	//    music.play('',0,1,true);
 	}
 	
+	function initialParams() {
+		airplaneDownStep = 32;
+		score=0;
+	}
 
 	function create() {
+		initialParams();
+		
 		createSounds();
 		background = game.add.sprite(0, 0, 'background');
 		genMap();
 		
-		score=0;
+		
 		var style = { font: "bold 20pt Arial", fill: "#ffffff", align: "center" };
-    	scoreText = game.add.text(game.world.width-200, 0, 'Score:', style);
+    	scoreText = game.add.text(10, 10, 'Score:', style);
     	setScore();
     	//scoreText.anchor.setTo(1, 0.5);
 		
 		
 		
 		airplane = game.add.sprite(0, 40, 'airplane');
-		airplane.anchor.setTo(0.5, 1);
+		airplane.anchor.setTo(0, 1);
 		airplane.animations.add('walk');
 		airplane.animations.play('walk', 40, true);
 		airplane.body.velocity.x = airplaneSpeed;
+		airplane.x = -airplane.width;	
 
 		game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
 		//dropBomb(100, 0);
@@ -112,6 +121,17 @@ function Airplane() {
 		setScore();
 	}
 
+	
+
+	function airplaneCollisionWithBulding(airplane, buldingModule) {		
+		destroyAirplane();
+		buldings.remove(buldingModule);
+		buldingModule.kill();
+		airplane.kill();
+		
+		
+		airplaneSound.stop();		
+	}
 
 
 	function collisionWithBulding(bomb, buldingModule) {
@@ -140,22 +160,25 @@ function Airplane() {
 	
 	
 	function dropBomb(x, y) {
-		x = Math.round(x / 32) * 32;
+		x = Math.round(x / 32) * 32 + 11;
 		bomb = game.add.sprite(x, y, 'bomb');
 
 		bomb.body.collideWorldBounds = true;
 		bomb.animations.add('walk');
 		bomb.animations.play('walk', 20, true);
 		bombCount = 5;
-		bomb.body.setRectangle(10, 32, 10, 0);
+		bomb.body.setRectangle(10, 26, 0, 0);
 		bomb.body.x = x;
 		bomb.body.y = y - 20;
 		bomb.body.velocity.y = bombSpeed;		
 	}
 	
 	function update() {
+		game.physics.overlap(airplane, buldings, airplaneCollisionWithBulding, null, this);
+		
 		if (bombCount > 0) {
 			game.physics.overlap(bomb, buldings, collisionWithBulding, null, this);
+			
 			if (bomb.y > game.stage.bounds.height - (bomb.height + 3)) {
 				destroyBomb();
 			}
@@ -166,10 +189,10 @@ function Airplane() {
 			}
 		}
 
-		if (airplane.x > game.stage.bounds.width + airplane.width) {
-			airplane.x = 0 - airplane.width;			
+		if (airplane.x > game.stage.bounds.width ) {
+			airplane.x = -airplane.width;			
 			//sprite.body.velocity.x=0;
-			airplane.y += 32;			
+			airplane.y += airplaneDownStep;			
 		}
 	}
 
