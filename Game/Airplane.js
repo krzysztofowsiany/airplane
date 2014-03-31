@@ -6,7 +6,7 @@
 function Airplane() {
 	var game = Phaser.Game, map, coins, bomb, bombCount, layer = undefined, airplane = undefined, cursors = undefined, CACTUS = 10, buldings, background, airplaneSpeed = 50, bombSpeed = 50
 
-	
+	,buldingImages
 	,boom
 
 	,touch
@@ -16,6 +16,7 @@ function Airplane() {
 	,score
 	,scoreText
 	
+	,segmentsX
 	
 	//sounds
 	,airplaneSound
@@ -24,7 +25,7 @@ function Airplane() {
 	;
 
 	function run() {
-		game = new Phaser.Game(800, 400, Phaser.AUTO, 'phaser-example', {
+		game = new Phaser.Game(800, 400, Phaser.CANVAS, 'phaser-example', {
 			preload : preload,
 			create : create,
 			update : update,
@@ -47,17 +48,26 @@ function Airplane() {
 		game.load.spritesheet('bomb', 'img/bomba3.png', 10, 26);
 		game.load.spritesheet('boom', 'img/boom.png', 64, 60);
 		game.load.spritesheet('airplane', 'samolocik.png', 80, 45);
+		
+		//buldings
+		game.load.spritesheet('buldings', 'img/buldings.png', 32, 32);
 
 	}
 
 	function genMap() {
 		buldings = game.add.group();
 		var maxWeight = Math.floor((game.stage.bounds.height / 32 ) * 0.8);
-		for (var x = 0; x < game.stage.bounds.width / 32; x++) {
-			for (var y = 1; y <= Math.floor((Math.random() * maxWeight ) + 1); y++) {
-				var c = buldings.create(x * 32, game.stage.bounds.height - y * 32, 'coin');
+		var bulding=1;
+		for (var x = 0; x < segmentsX; x++) {
+			bulding = 1;
+			var random = Math.floor((Math.random() * maxWeight ) + 2);
+			for (var y = 1; y < random; y++) {
+				if (y==random-1)
+					buldings.create(x * 32, game.stage.bounds.height - y * 32, 'buldings', 1);
+				else
+					buldings.create(x * 32, game.stage.bounds.height - y * 32, 'buldings', 2);
 
-				c.name = 'coin' + x + y;
+				//c.name = 'coin' + x + y;
 				//c.anchor.setTo(0.5,0.5);
 
 				// c.body.bounce.y  =1;
@@ -96,6 +106,7 @@ function Airplane() {
 	function initialParams() {
 		airplaneDownStep = 32;
 		score=0;
+		segmentsX = game.stage.bounds.width / 32;
 	}
 
 	function create() {
@@ -134,7 +145,7 @@ function Airplane() {
 	
 	function destroyBomb() {
 		fallingSound.stop();
-                boomSound.play();
+        boomSound.play();
 		bombCount = 0;
 		bomb.kill();
 	}
@@ -145,12 +156,19 @@ function Airplane() {
 		setScore();
 	}
 
+	function destroyAirplane(){
+		airplaneSound.stop();
+		airplane.destroy();		
+	}
 	
 
 	function airplaneCollisionWithBulding(airplane, buldingModule) {		
 		destroyAirplane();
 		buldings.remove(buldingModule);
 		buldingModule.kill();
+		
+		
+		
 		airplane.kill();
 		
 		
@@ -170,9 +188,17 @@ function Airplane() {
 
 	function collisionWithBulding(bomb, buldingModule) {
 		bombCount--;
+        var nextDown = buldings.getIndex(buldingModule) -1;
+        
         boomSound.play();
 		buldings.remove(buldingModule);
 		buldingModule.kill();		
+		var nextSegment = buldings.getAt(nextDown);
+		console.log(nextSegment);
+		buldings.replace(nextSegment,		
+			buldings.create(nextSegment.x,nextSegment.y, 'buldings', 0)
+		);
+			
 		
 		showBoom();
 		
